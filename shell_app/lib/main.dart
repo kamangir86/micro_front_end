@@ -1,11 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:core/core.dart';
+import 'package:auth_app/auth_app.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+
+// Register micro apps
+  final microApps = [
+    AuthMicroApp(),
+    // ProfileMicroApp(),
+    // ProductMicroApp(),
+  ];
+
+  final registry = MicroAppRegistry();
+
+  // Initialize each micro app
+  for (final microApp in microApps) {
+    registry.registerApp(microApp);
+    await microApp.registerDependencies();
+    await microApp.registerEventHandlers(CoreEventBusService());
+  }
+
+  runApp(const ShellApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ShellApp extends StatelessWidget {
+  const ShellApp({super.key});
 
   // This widget is the root of your application.
   @override
